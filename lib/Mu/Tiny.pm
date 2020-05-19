@@ -3,7 +3,6 @@ package Mu::Tiny;
 use strict;
 use warnings;
 use Carp ();
-use Mu::Tiny::Object;
 
 sub import {
   my $targ = caller;
@@ -13,6 +12,9 @@ sub import {
   *{"${targ}::extends"} = sub {
     Carp::croak "Can't call extends after attributes" if $attrs;
     Carp::croak "No superclass list passed to extends" unless @_;
+    foreach my $el (@_) {
+      require join('/', split '::', $el).'.pm';
+    }
     @$isa = @_;
   };
   *{"${targ}::ro"} = sub {
@@ -53,5 +55,26 @@ sub _setup_attrs {
   *{"${targ}::${ATTRS}"} = sub { $_[0]->$orig, %$attrs };
   $attrs;
 }
+
+package Mu::Tiny::Object;
+
+sub __Mu__Tiny__attrs { () }
+
+my %spec;
+
+sub new {
+  my $class = shift;
+  my ($attr, $req) = @{$spec{$class} ||= do {
+    my %attrs = $class->__Mu__Tiny__attrs;
+    [[ sort keys %attrs ], [ sort grep $attrs{$_}, keys %attrs ]];
+  }};
+  my %args = @_ ? @_ > 1 ? @_ : %{$_[0]} : ();
+  my @missing = grep !exists($args{$_}), @$req;
+  Carp::croak "Missing required attributes: ".join(', ', @missing) if @missing;
+  my %new = map { exists($args{$_}) ? ($_ => $args{$_}) : () } @$attr;
+  bless(\%new, ref($class) || $class);
+}
+
+$INC{"Mu/Tiny/Object.pm"} = __FILE__;
 
 1;
