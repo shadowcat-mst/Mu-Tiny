@@ -1,11 +1,17 @@
 package Mu::Tiny;
 
+our $VERSION = '0.000001'; # 0.0.1
+
+$VERSION = eval $VERSION;
+
 use strict;
 use warnings;
 use Carp ();
 
 sub import {
   my $targ = caller;
+  strict->import;
+  warnings->import;
   no strict 'refs';
   @$_ or @$_ = ('Mu::Tiny::Object') for my $isa = \@{"${targ}::ISA"};
   my $attrs;
@@ -78,3 +84,88 @@ sub new {
 $INC{"Mu/Tiny/Object.pm"} = __FILE__;
 
 1;
+
+=head1 NAME
+
+Mu::Tiny - NAE KING! NAE QUIN! NAE CAPTAIN! WE WILLNAE BE FOOLED AGAIN!
+
+=head1 SYNOPSIS
+
+  BEGIN {
+    package Feegle;
+  
+    use Mu::Tiny;
+  
+    ro 'name';
+    lazy plan => sub { 'PLN' };
+  }
+  
+  my $rob = Feegle->new(name => 'Rob Anybody'); # name is required
+  
+  say $rob->plan; # outputs 'PLN'
+
+=head1 DESCRIPTION
+
+This is the aaaabsoluuuute baaaaare minimumimumimum subset o' L<Mu>, for
+those o' ye who value yer independence over yer sanity. It doesnae trouble
+wi' anythin' but the read-onlies, for tis a terrible thing to make a feegle
+try t' write.
+
+=head1 METHODS
+
+=head2 new
+
+  my $new = Feegle->new(%attrs|\%attrs);
+
+The new method be inherited from C<Mu::Tiny::Object> like a shiny thing or
+the duties o' a Kelda.
+
+Ye may hand it a hash, or if ye already made yer own hash o' things, a
+reference to the one so pre-prepared.
+
+An ye forget any o' the attrs declared as L</ro>, then C<new> will go
+waily waily waily and C<croak> with a list of all that ye missed.
+
+=head1 EXPORTS
+
+=head2 ro
+
+  ro 'attr';
+
+An C<ro> attr be required and read only, and knows nothin' but its own name.
+
+=head2 lazy
+
+  lazy 'attr' => sub { <build default value> };
+
+A <lazy> attr be read only but not required, an' if ye make us, we'll take a
+guess at what ye wanted, but only when we must.
+
+If'n ye be slightly less lazy than us, then subclass and override yan
+C<_build_attr> method t' change tha guess.
+
+=head1 WHUT
+
+Dinnae fash yersel', Hamish, you prob'ly wanted L<Mu> anyway.
+
+=head1 APOLOGIES
+
+... to Terry Pratchett, Mithaldu, and probably everybody else as well.
+
+=head1 AUTHOR
+
+ mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>
+
+=head1 CONTRIBUTORS
+
+None yet - maybe this software is perfect! (ahahahahahahahahaha)
+
+=head1 COPYRIGHT
+
+Copyright (c) 2020 the Mu::Tiny L</AUTHOR> and L</CONTRIBUTORS>
+as listed above.
+
+=head1 LICENSE
+
+This library is free software and may be distributed under the same terms
+as perl itself.
