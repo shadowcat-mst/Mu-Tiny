@@ -42,9 +42,9 @@ sub import {
       Carp::croak "Builder passed to lazy must be name or code, not ${builder}";
     }
     *{"${targ}::${name}"} = sub {
-      exists $_[0]->{$name}
+      exists($_[0]->{$name})
         ? $_[0]->{name}
-        : $_[0]->{name} = $_[0]->$builder
+        : ($_[0]->{name} = $_[0]->$builder)
     };
   };
 }
