@@ -138,7 +138,7 @@ An C<ro> attr be required and read only, and knows nothin' but its own name.
 
   lazy 'attr' => sub { <build default value> };
 
-A <lazy> attr be read only but not required, an' if ye make us, we'll take a
+A C<lazy> attr be read only but not required, an' if ye make us, we'll take a
 guess at what ye wanted, but only when we must.
 
 If'n ye be slightly less lazy than us, then subclass and override yan
