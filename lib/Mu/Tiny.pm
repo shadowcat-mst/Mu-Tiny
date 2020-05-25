@@ -43,8 +43,8 @@ sub import {
     }
     *{"${targ}::${name}"} = sub {
       exists($_[0]->{$name})
-        ? $_[0]->{name}
-        : ($_[0]->{name} = $_[0]->$builder)
+        ? $_[0]->{$name}
+        : ($_[0]->{$name} = $_[0]->$builder)
     };
   };
 }
